@@ -464,55 +464,55 @@ But if you’re making money, will you really care?</p>
     <div class="feature-line">
         <span class="label"><i class="fa-solid fa-check" style="color:#fff;"></i> My AI System For Non-Expert Niches</span>
         <span class="dots"></span>
-        <span class="price">$1999</span>
+        <span class="price" data-usd="$1999" data-pkr="Rs. 559,720">$1999</span>
     </div>
 
     <div class="feature-line">
         <span class="label"><i class="fa-solid fa-check" style="color:#fff;"></i> 12x Live Sessions (1 Month)</span>
         <span class="dots"></span>
-        <span class="price">$999</span>
+        <span class="price" data-usd="$999" data-pkr="Rs. 279,720">$999</span>
     </div>
 
     <div class="feature-line">
         <span class="label"><i class="fa-solid fa-check" style="color:#fff;"></i> List of hand-picked Non-Expert niches</span>
         <span class="dots"></span>
-        <span class="price">$299</span>
+        <span class="price" data-usd="$299" data-pkr="Rs. 83,720">$299</span>
     </div>
 
     <div class="feature-line">
         <span class="label"><i class="fa-solid fa-check" style="color:#fff;"></i> Individual Channel Review</span>
         <span class="dots"></span>
-        <span class="price">$799</span>
+        <span class="price" data-usd="$799" data-pkr="Rs. 223,720">$799</span>
     </div>
 
     <div class="feature-line">
         <span class="label"><i class="fa-solid fa-check" style="color:#fff;"></i> Monetise Private Community (Lifetime)</span>
         <span class="dots"></span>
-        <span class="price">Priceless</span>
+        <span class="price" data-usd="Priceless" data-pkr="Priceless">Priceless</span>
     </div>
 
     <div class="feature-line">
         <span class="label"><i class="fa-solid fa-check" style="color:#fff;"></i> Canva Thumbnail Templates</span>
         <span class="dots"></span>
-        <span class="price">Priceless</span>
+        <span class="price" data-usd="Priceless" data-pkr="Priceless">Priceless</span>
     </div>
 
     <div class="feature-line">
         <span class="label"><i class="fa-solid fa-check" style="color:#fff;"></i> Learn Until you Earn Guarantee</span>
         <span class="dots"></span>
-        <span class="price">Priceless</span>
+        <span class="price" data-usd="Priceless" data-pkr="Priceless">Priceless</span>
     </div>
 
      <div class="feature-line">
         <span class="label"><i class="fa-solid fa-check" style="color:#fff;"></i> Available for questions 24/5</span>
         <span class="dots"></span>
-        <span class="price">Priceless</span>
+        <span class="price" data-usd="Priceless" data-pkr="Priceless">Priceless</span>
     </div>
 
     <div class="feature-line">
         <span class="label"><i class="fa-solid fa-check" style="color:#fff;"></i> Monthly review of your channel</span>
         <span class="dots"></span>
-        <span class="price">Priceless</span>
+        <span class="price" data-usd="Priceless" data-pkr="Priceless">Priceless</span>
     </div>
 
     <!-- Divider -->
@@ -521,7 +521,7 @@ But if you’re making money, will you really care?</p>
     <!-- TOTAL ROW -->
     <div class="total-row">
         <span></span>
-        <span class="total-price" style="font-weight: bold; font-size: 1.8rem;">$99.00 <span style="font-weight: 200; color: #cfd8df;">one-time</span></span>
+        <span class="total-price" style="font-weight: bold; font-size: 1.8rem;" data-usd='$99.00 <span style="font-weight: 200; color: #cfd8df;">one-time</span>' data-pkr='Rs. 27,720 <span style="font-weight: 200; color: #cfd8df;">one-time</span>'>$99.00 <span style="font-weight: 200; color: #cfd8df;">one-time</span></span>
     </div>
 
     <!-- BUTTON -->
@@ -824,6 +824,47 @@ In our 90-Day program, we provide a complete step-by-step system along with begi
         setTimeout(updateBatchStatus, 1000);
         setTimeout(updateBatchStatus, 2000);
       })();
+    </script>
+    
+    <!-- ========================= Currency Switching Logic ========================= -->
+    <script>
+      async function setPrices() {
+        try {
+          const ipRes = await fetch("https://api.ipify.org?format=json");
+          const ipData = await ipRes.json();
+          const geoRes = await fetch(`https://ipapi.co/${ipData.ip}/json/`);
+          const geo = await geoRes.json();
+          const country = geo.country;
+
+          // Update all .price elements
+          const prices = document.querySelectorAll(".price");
+          prices.forEach(el => {
+            el.textContent = (country === "PK")
+              ? el.dataset.pkr
+              : el.dataset.usd;
+          });
+
+          // Update .total-price element (uses innerHTML because it contains HTML)
+          const totalPrice = document.querySelector(".total-price");
+          if (totalPrice) {
+            totalPrice.innerHTML = (country === "PK")
+              ? totalPrice.dataset.pkr
+              : totalPrice.dataset.usd;
+          }
+        } catch (error) {
+          console.log("Location Error:", error);
+          // Fallback to USD
+          document.querySelectorAll(".price").forEach(el => {
+            el.textContent = el.dataset.usd;
+          });
+          const totalPrice = document.querySelector(".total-price");
+          if (totalPrice) {
+            totalPrice.innerHTML = totalPrice.dataset.usd;
+          }
+        }
+      }
+
+      setPrices();
     </script>
     
   </body>
