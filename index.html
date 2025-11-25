@@ -16,6 +16,35 @@
     <link rel="stylesheet" href="assets/css/animate.css"/>
     <link rel="stylesheet" href="assets/css/main.css"/>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+      .whop-modal{position:fixed;inset:0;padding:24px;display:flex;align-items:center;justify-content:center;background:rgba(2,5,12,0.85);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .3s ease;z-index:9999;}
+      .whop-modal.is-visible{opacity:1;pointer-events:auto;}
+      .whop-modal__overlay{position:absolute;inset:0;background:rgba(2,5,12,0.75);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);transition:opacity .35s ease;}
+      .whop-modal__dialog{position:relative;display:flex;flex-direction:column;width:min(920px,100%);max-height:90vh;background:rgba(7,10,18,0.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-radius:24px;border:1px solid rgba(255,255,255,0.07);padding:clamp(1.25rem,2vw,2rem);box-shadow:0 30px 80px rgba(0,0,0,0.65);color:#fff;overflow:hidden;transform:translateY(24px) scale(0.97);transition:transform .35s ease, border-color .35s ease, background .35s ease;overflow-y:auto;}
+      .whop-modal.is-visible .whop-modal__dialog{transform:translateY(0) scale(1);}
+      .whop-modal__header{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1rem;}
+      .whop-modal__title{font-size:1.25rem;margin:0;font-weight:600;}
+      .whop-modal__close{position:absolute;top:12px;right:12px;width:40px;height:40px;border-radius:50%;border:none;background:rgba(255,255,255,0.08);color:#fff;font-size:1.3rem;cursor:pointer;transition:background .2s ease;}
+      .whop-modal__close:hover{background:rgba(255,255,255,0.2);}
+      .whop-modal__body{flex:1;min-height:0;background:linear-gradient(145deg,rgba(6,8,18,0.95),rgba(4,4,9,0.9));border-radius:18px;padding:0;overflow:hidden;display:flex;}
+      .whop-modal__body-scroll{flex:1;height:auto;max-height:none;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:1rem;overscroll-behavior:contain;}
+      #whop-checkout{width:100%;min-height:520px;}
+      body.modal-open,html.modal-open{overflow:hidden;}
+      .whop-modal__dialog,
+      .whop-modal__body-scroll{scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.25) rgba(255,255,255,0.04);}
+      .whop-modal__dialog::-webkit-scrollbar,
+      .whop-modal__body-scroll::-webkit-scrollbar{width:8px;}
+      .whop-modal__dialog::-webkit-scrollbar-track,
+      .whop-modal__body-scroll::-webkit-scrollbar-track{background:rgba(255,255,255,0.05);border-radius:999px;}
+      .whop-modal__dialog::-webkit-scrollbar-thumb,
+      .whop-modal__body-scroll::-webkit-scrollbar-thumb{background:linear-gradient(180deg,rgba(255,255,255,0.45),rgba(255,255,255,0.15));border-radius:999px;}
+      @media (max-width:640px){
+        .whop-modal{padding:12px;}
+        .whop-modal__dialog{border-radius:18px;padding:1rem;}
+        .whop-modal__title{font-size:1.1rem;}
+        #whop-checkout{min-height:460px;}
+      }
+    </style>
   
   </head>
   <body>
@@ -68,7 +97,7 @@
 									</div>
                 </div>
 								<div class="header-btn">
-									<a href="#pricing" class="main-btn btn-hover header-join-btn">JOIN NOW</a>
+									<a href="#pricing" class="main-btn btn-hover header-join-btn" data-whop-modal-trigger="true">JOIN NOW</a>
 								</div>
                 <!-- navbar collapse -->
               </nav>
@@ -96,7 +125,7 @@
 							<!-- Replace the "YOUR_YOUTUBE_VIDEO_ID" with your actual YouTube video ID -->
 							<iframe class="embed-responsive-item" src="https://www.youtube.com/embed/RD2z0LpUTyI?si=gp_X0dm-qzsrzhH5" width="560" height="315" allowfullscreen></iframe>
 						</div>
-						<a href="#pricing" class="main-btn btn-hover">JOIN NOW</a>
+						<a href="#pricing" class="main-btn btn-hover" data-whop-modal-trigger="true">JOIN NOW</a>
 					</div>
 				</div>
 			</div>
@@ -260,7 +289,7 @@
     </ul>
 </div>
 
-                      <a href="#pricing" class="main-btn btn-hover">JOIN NOW</a>
+                      <a href="#pricing" class="main-btn btn-hover" data-whop-modal-trigger="true">JOIN NOW</a>
 
                   </div>
                 </div>
@@ -425,7 +454,7 @@ But if you’re making money, will you really care?</p>
  <span style="border-radius: 15px; font-size: 1.2rem; margin-top: 50px;">"It's like starting or elevating your YouTube <br>
   career with an experienced expert on your team"</span>
                   </div>
-                  <a href="#pricing" class="main-btn btn-hover">JOIN NOW</a>
+                  <a href="#pricing" class="main-btn btn-hover" data-whop-modal-trigger="true">JOIN NOW</a>
                 </div>
               </div>
             </div>
@@ -766,6 +795,26 @@ In our 90-Day program, we provide a complete step-by-step system along with begi
   </div>
 </footer>
 
+    <!-- ========================= Whop Checkout Modal ========================= -->
+    <div class="whop-modal" id="whopModal" aria-hidden="true">
+      <div class="whop-modal__overlay" data-modal-close></div>
+      <div class="whop-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="whopModalTitle">
+        <button class="whop-modal__close" type="button" aria-label="Close checkout" data-modal-close>&times;</button>
+        <div class="whop-modal__header">
+          <h3 class="whop-modal__title" id="whopModalTitle">Complete Your Enrollment</h3>
+        </div>
+        <div class="whop-modal__body">
+          <div class="whop-modal__body-scroll">
+            <div
+              id="whop-checkout"
+              data-whop-checkout-plan-id="plan_hhZFVShyV9lcp"
+              data-whop-checkout-theme="dark">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
 
 
 
@@ -867,5 +916,48 @@ In our 90-Day program, we provide a complete step-by-step system along with begi
       setPrices();
     </script>
     
+    <!-- ========================= Whop Checkout Loader & Modal Logic ========================= -->
+    <script async defer src="https://js.whop.com/static/checkout/loader.js"></script>
+    <script>
+      (function () {
+        const modal = document.getElementById('whopModal');
+        if (!modal) return;
+
+        const openers = document.querySelectorAll('[data-whop-modal-trigger]');
+        const closeElements = modal.querySelectorAll('[data-modal-close]');
+        const body = document.body;
+        const root = document.documentElement;
+
+        function openModal(event) {
+          if (event) event.preventDefault();
+          modal.classList.add('is-visible');
+          body.classList.add('modal-open');
+          root.classList.add('modal-open');
+        }
+
+        function closeModal() {
+          modal.classList.remove('is-visible');
+          body.classList.remove('modal-open');
+          root.classList.remove('modal-open');
+        }
+
+        openers.forEach(btn => btn.addEventListener('click', openModal));
+        closeElements.forEach(btn => btn.addEventListener('click', closeModal));
+
+        modal.addEventListener('click', event => {
+          const shouldClose = event.target.dataset.modalClose !== undefined;
+          if (shouldClose) {
+            closeModal();
+          }
+        });
+
+        document.addEventListener('keydown', event => {
+          if (event.key === 'Escape' && modal.classList.contains('is-visible')) {
+            closeModal();
+          }
+        });
+      })();
+    </script>
+
   </body>
 </html>
