@@ -1,3 +1,48 @@
+/* Modal spacing fixes: remove extra space under the Join button */
+.modal-footer {
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+/* Ensure buttons inside modals don't add bottom margin */
+.modal .btn {
+  margin-bottom: 0;
+}
+
+/* If the body has extra spacing, keep it tight */
+.modal-body {
+  padding-bottom: 1rem; /* adjust if needed */
+}
+
+/* Remove bottom padding/margin from the modal content to avoid extra gap */
+.modal-content {
+  padding-bottom: 0;
+}
+
+/* Ensure the last element inside modal has no trailing margin */
+.modal-body > :last-child,
+.modal-footer > :last-child {
+  margin-bottom: 0;
+}
+
+/* Reduce dialog bottom spacing and make scrollbar use full height */
+.modal-dialog {
+  margin-bottom: 0; /* override Bootstrap default */
+  height: 100%;
+}
+
+/* Make modal content fill and allow internal scrolling without bottom gap */
+.modal-content {
+  height: auto;
+  max-height: calc(100vh - 2rem);
+  overflow: hidden;
+}
+
+/* Constrain scroll to body area so footer sticks tight to content */
+.modal-body {
+  max-height: calc(100vh - 10rem); /* tune if header/footer sizes differ */
+  overflow-y: auto;
+}
 /* ============================
   Template Name: SaaSdeck
   Author: uideck

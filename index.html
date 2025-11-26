@@ -17,32 +17,470 @@
     <link rel="stylesheet" href="assets/css/main.css"/>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-      .whop-modal{position:fixed;inset:0;padding:24px;display:flex;align-items:center;justify-content:center;background:rgba(2,5,12,0.85);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .3s ease;z-index:9999;}
-      .whop-modal.is-visible{opacity:1;pointer-events:auto;}
-      .whop-modal__overlay{position:absolute;inset:0;background:rgba(2,5,12,0.75);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);transition:opacity .35s ease;}
-      .whop-modal__dialog{position:relative;display:flex;flex-direction:column;width:min(920px,100%);max-height:90vh;background:rgba(7,10,18,0.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-radius:24px;border:1px solid rgba(255,255,255,0.07);padding:clamp(1.25rem,2vw,2rem);box-shadow:0 30px 80px rgba(0,0,0,0.65);color:#fff;overflow:hidden;transform:translateY(24px) scale(0.97);transition:transform .35s ease, border-color .35s ease, background .35s ease;overflow-y:auto;}
-      .whop-modal.is-visible .whop-modal__dialog{transform:translateY(0) scale(1);}
-      .whop-modal__header{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1rem;}
-      .whop-modal__title{font-size:1.25rem;margin:0;font-weight:600;}
-      .whop-modal__close{position:absolute;top:12px;right:12px;width:40px;height:40px;border-radius:50%;border:none;background:rgba(255,255,255,0.08);color:#fff;font-size:1.3rem;cursor:pointer;transition:background .2s ease;}
-      .whop-modal__close:hover{background:rgba(255,255,255,0.2);}
-      .whop-modal__body{flex:1;min-height:0;background:linear-gradient(145deg,rgba(6,8,18,0.95),rgba(4,4,9,0.9));border-radius:18px;padding:0;overflow:hidden;display:flex;}
-      .whop-modal__body-scroll{flex:1;height:auto;max-height:none;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:1rem;overscroll-behavior:contain;}
-      #whop-checkout{width:100%;min-height:520px;}
+      .whop-modal{
+        position:fixed;
+        inset:0;
+        padding:24px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        background:rgba(0,0,0,0.95);
+        backdrop-filter:blur(12px);
+        -webkit-backdrop-filter:blur(12px);
+        opacity:0;
+        pointer-events:none;
+        transition:opacity .4s cubic-bezier(0.4,0,0.2,1);
+        z-index:9999;
+      }
+      .whop-modal.is-visible{
+        opacity:1;
+        pointer-events:auto;
+      }
+      .whop-modal__overlay{
+        position:absolute;
+        inset:0;
+        background:rgba(0,0,0,0.9);
+        backdrop-filter:blur(20px);
+        -webkit-backdrop-filter:blur(20px);
+        transition:opacity .4s ease;
+      }
+      .whop-modal__dialog{
+        position:relative;
+        display:flex;
+        flex-direction:column;
+        width:min(1200px,95%);
+        height:90vh;
+        max-height:90vh;
+        background:#050505;
+        backdrop-filter:blur(18px);
+        -webkit-backdrop-filter:blur(18px);
+        border-radius:26px;
+        border:1px solid rgba(255,255,255,0.04);
+        padding:28px;
+        box-shadow:0 45px 140px rgba(0,0,0,0.9);
+        color:#fff;
+        overflow:hidden;
+        transform:translateY(32px) scale(0.96);
+        transition:transform .5s cubic-bezier(0.34,1.56,0.64,1), opacity .4s ease;
+      }
+      .whop-modal.is-visible .whop-modal__dialog{
+        transform:translateY(0) scale(1);
+      }
+      .whop-modal__header{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        padding-bottom:16px;
+        margin-bottom:20px;
+        border-bottom:1px solid rgba(255,255,255,0.08);
+        position:relative;
+        z-index:100;
+      }
+      .whop-modal__title{
+        font-size:1.5rem;
+        margin:0;
+        font-weight:700;
+        letter-spacing:-0.02em;
+        color:#fff;
+        display:flex;
+        align-items:center;
+        gap:12px;
+      }
+      .whop-modal__title .back-button{
+        font-size:1.2rem;
+        opacity:0.7;
+        transition:all .2s ease;
+        user-select:none;
+        color:#fff;
+        cursor:pointer;
+        pointer-events:auto;
+        z-index:100;
+        position:relative;
+      }
+      .whop-modal__title .back-button:hover{
+        opacity:1;
+        color:rgba(255,255,255,0.9);
+      }
+      .whop-modal__close{
+        position:absolute;
+        top:20px;
+        right:20px;
+        width:44px;
+        height:44px;
+        border-radius:12px;
+        border:none;
+        background:rgba(255,255,255,0.08);
+        color:#fff;
+        font-size:1.5rem;
+        cursor:pointer;
+        transition:all .2s ease;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        z-index:99999;
+        pointer-events:auto;
+      }
+      .whop-modal__close:hover{
+        background:rgba(255,255,255,0.15);
+        transform:scale(1.05);
+        color:#ff0;
+      }
+      .whop-modal__body{
+        flex:1;
+        min-height:0;
+        display:flex;
+        flex-direction:column;
+        overflow:hidden;
+      }
+      .card-container{
+        flex:1;
+        height:100%;
+        display:grid;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:20px;
+        min-height:0;
+      }
+      .modal-card{
+        background:#090909;
+        border-radius:20px;
+        display:flex;
+        flex-direction:column;
+        box-shadow:0 12px 32px rgba(0,0,0,0.65);
+        border:1px solid rgba(255,255,255,0.08);
+        overflow:hidden;
+        min-height:0;
+      }
+      .card-inner{
+        flex:1;
+        min-height:0;
+        height:100%;
+        overflow-y:auto;
+        max-height:100%;
+        display:flex;
+        flex-direction:column;
+        gap:16px;
+        /* -webkit-overflow-scrolling:touch;
+        scroll-behavior:smooth; */
+        padding:28px;
+        padding-right:16px;
+        background:#090909;
+        /* scrollbar-gutter:stable; */
+      }
+      .modal-card iframe{
+        width:100%;
+        height:100%;
+        border:none;
+        overflow-y:auto;
+      }
+
+      /* Checkout Card - Match iframe dark color exactly */
+      .checkout-card{
+        background:#090909 !important;
+        /* overflow:hidden; */
+      }
+      .checkout-card .card-inner{
+        padding:8px 20px 8px 20px; /* minimal padding */
+        padding-right:16px;
+        background:#090909 !important;
+        overflow-y:auto !important;
+        overflow-x:hidden !important;
+        max-height:100%;
+        position:relative;
+        display:flex !important;
+        flex-direction:column !important;
+      }
+      /* Whop checkout container */
+      .checkout-card #whop-checkout{
+        width:100%;
+        display:block !important;
+        background:#090909 !important;
+        border-radius:0;
+        padding:0;
+        padding-bottom:8px !important;
+        margin:0;
+        /* box-sizing:border-box; */
+        min-height:0 !important;
+        height:100% !important;
+        /* position:relative; */
+        flex:1 1 auto;
+      }
+      /* Match Whop's dark theme colors */
+      .checkout-card #whop-checkout *{
+        max-width:100% !important;
+      }
+      /* Force extra space at the end of checkout content */
+      .checkout-card #whop-checkout::after{
+        content:"";
+        display:block;
+        height:8px;
+        flex-shrink:0;
+      }
+      .checkout-card #whop-checkout iframe{
+        width:100% !important;
+        border:none !important;
+        max-width:100% !important;
+        min-height:0 !important;
+        height:100% !important;
+        /* max-height:none !important;
+        overflow:auto !important; */
+        display:block !important;
+        position:relative !important;
+        background:#090909 !important;
+      }
+      .checkout-card #whop-checkout > div,
+      .checkout-card #whop-checkout form,
+      .checkout-card #whop-checkout section,
+      .checkout-card #whop-checkout article,
+      .checkout-card #whop-checkout main{
+        width:100% !important;
+        max-width:100% !important;
+        /* min-height:auto !important; */
+        /* height:auto !important; */
+        display:block !important;
+        /* overflow:visible !important; */
+        padding-right:0 !important;
+        /* box-sizing:border-box !important; */
+      }
+      /* Form elements */
+      .checkout-card #whop-checkout input,
+      .checkout-card #whop-checkout select,
+      .checkout-card #whop-checkout label{
+        width:100% !important;
+        max-width:100% !important;
+        /* box-sizing:border-box !important; */
+      }
+      /* Ensure checkout form and button container are properly sized */
+      .checkout-card #whop-checkout button[type="submit"]{
+        margin-top:auto !important;
+        margin-bottom:48px !important;
+        flex-shrink:0 !important;
+      }
+      /* Ensure Whop checkout button is visible - minimal styling only */
+      .checkout-card #whop-checkout button[type="submit"],
+      .checkout-card #whop-checkout button:last-child,
+      .checkout-card #whop-checkout [type="submit"]{
+        display:block !important;
+        visibility:visible !important;
+        opacity:1 !important;
+        width:100% !important;
+        margin-top:auto !important;
+        margin-bottom:48px !important;
+        flex-shrink:0 !important;
+      }
+      /* Order Summary Styling */
+      .order-summary{
+        flex:1;
+        display:flex;
+        flex-direction:column;
+      }
+      .order-summary__logo{
+        max-width:200px;
+        height:auto;
+        margin-bottom:16px;
+        display:block;
+      }
+      .order-summary__title-wrapper{
+        margin-bottom:24px;
+      }
+      .order-summary__title{
+        font-size:1.75rem;
+        font-weight:700;
+        margin:0 0 8px;
+        color:#fff;
+        letter-spacing:-0.02em;
+      }
+      .order-summary__title-wrapper .order-summary__title{
+        display:none;
+      }
+      .order-summary__tagline{
+        font-size:0.95rem;
+        color:#ff0;
+        font-weight:600;
+        margin:0;
+        letter-spacing:0.5px;
+      }
+      .order-summary__features{
+        list-style:none;
+        padding:0;
+        margin:0 0 32px;
+      }
+      .order-summary__feature{
+        display:flex;
+        align-items:flex-start;
+        gap:12px;
+        padding:12px 0;
+        color:rgba(255,255,255,0.8);
+        font-size:0.95rem;
+        line-height:1.6;
+      }
+      .order-summary__feature-icon{
+        width:20px;
+        height:20px;
+        flex-shrink:0;
+        margin-top:2px;
+        color:#ff0;
+        stroke-width:2.5;
+      }
+      .order-summary__pricing{
+        border-top:1px solid rgba(255,255,255,0.1);
+        padding-top:24px;
+        margin-top:24px;
+      }
+      .order-summary__price-row{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        padding:8px 0;
+        color:#fff;
+        font-size:0.95rem;
+      }
+      .order-summary__price-row--total{
+        border-top:1px solid rgba(255,255,255,0.1);
+        margin-top:16px;
+        padding-top:20px;
+        font-size:1.25rem;
+        font-weight:700;
+      }
+      .order-summary__price-label{
+        color:rgba(255,255,255,0.6);
+      }
+      .order-summary__price-value{
+        font-weight:600;
+        color:#fff;
+      }
+      .order-summary__price-value--total{
+        font-size:1.5rem;
+        font-weight:700;
+        color:#ff0;
+      }
+      .order-summary__disclaimer{
+        margin-top:24px;
+        padding-top:24px;
+        border-top:1px solid rgba(255,255,255,0.08);
+        font-size:0.75rem;
+        color:rgba(255,255,255,0.5);
+        line-height:1.6;
+        text-align:center;
+      }
+      .order-summary__disclaimer a{
+        color:#ff0;
+        text-decoration:none;
+        pointer-events:none;
+        cursor:default;
+      }
+      .order-summary__disclaimer a:hover{
+        color:#ff0;
+      }
       body.modal-open,html.modal-open{overflow:hidden;}
+      /* Dark scrollbars for modal and cards */
       .whop-modal__dialog,
-      .whop-modal__body-scroll{scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.25) rgba(255,255,255,0.04);}
+      .card-inner,
+      .checkout-card #whop-checkout,
+      .checkout-card #whop-checkout iframe,
+      .checkout-card #whop-checkout > div,
+      .checkout-card #whop-checkout form{
+        scrollbar-width:thin;
+        scrollbar-color:rgba(255,255,255,0.3) rgba(255,255,255,0.08);
+      }
       .whop-modal__dialog::-webkit-scrollbar,
-      .whop-modal__body-scroll::-webkit-scrollbar{width:8px;}
+      .card-inner::-webkit-scrollbar,
+      .checkout-card #whop-checkout::-webkit-scrollbar,
+      .checkout-card #whop-checkout iframe::-webkit-scrollbar,
+      .checkout-card #whop-checkout > div::-webkit-scrollbar,
+      .checkout-card #whop-checkout form::-webkit-scrollbar{
+        width:10px;
+        height:5px;
+      }
       .whop-modal__dialog::-webkit-scrollbar-track,
-      .whop-modal__body-scroll::-webkit-scrollbar-track{background:rgba(255,255,255,0.05);border-radius:999px;}
+      .card-inner::-webkit-scrollbar-track,
+      .checkout-card #whop-checkout::-webkit-scrollbar-track,
+      .checkout-card #whop-checkout iframe::-webkit-scrollbar-track,
+      .checkout-card #whop-checkout > div::-webkit-scrollbar-track,
+      .checkout-card #whop-checkout form::-webkit-scrollbar-track{
+        background:rgba(255,255,255,0.08);
+        border-radius:999px;
+        margin:2px;
+      }
       .whop-modal__dialog::-webkit-scrollbar-thumb,
-      .whop-modal__body-scroll::-webkit-scrollbar-thumb{background:linear-gradient(180deg,rgba(255,255,255,0.45),rgba(255,255,255,0.15));border-radius:999px;}
+      .card-inner::-webkit-scrollbar-thumb,
+      .checkout-card #whop-checkout::-webkit-scrollbar-thumb,
+      .checkout-card #whop-checkout iframe::-webkit-scrollbar-thumb,
+      .checkout-card #whop-checkout > div::-webkit-scrollbar-thumb,
+      .checkout-card #whop-checkout form::-webkit-scrollbar-thumb{
+        background:rgba(255,255,255,0.3);
+        border-radius:999px;
+        border:2px solid transparent;
+        background-clip:padding-box;
+      }
+      .whop-modal__dialog::-webkit-scrollbar-thumb:hover,
+      .card-inner::-webkit-scrollbar-thumb:hover,
+      .checkout-card #whop-checkout::-webkit-scrollbar-thumb:hover,
+      .checkout-card #whop-checkout iframe::-webkit-scrollbar-thumb:hover,
+      .checkout-card #whop-checkout > div::-webkit-scrollbar-thumb:hover,
+      .checkout-card #whop-checkout form::-webkit-scrollbar-thumb:hover{
+        background:rgba(255,255,0,0.5);
+        background-clip:padding-box;
+      }
+      @media (max-width:968px){
+        .whop-modal__dialog{
+          width:min(700px,95%);
+          height:auto;
+          max-height:none;
+          overflow:visible;
+        }
+        .card-container{
+          grid-template-columns:1fr;
+          gap:16px;
+        }
+        .checkout-card .card-inner{
+          overflow:visible !important;
+          max-height:none !important;
+          height:auto !important;
+        }
+        .checkout-card #whop-checkout,
+        .checkout-card #whop-checkout iframe{
+          min-height:auto !important;
+          height:auto !important;
+        }
+        .modal-card{
+          overflow:visible;
+          height:auto;
+        }
+      }
       @media (max-width:640px){
-        .whop-modal{padding:12px;}
-        .whop-modal__dialog{border-radius:18px;padding:1rem;}
-        .whop-modal__title{font-size:1.1rem;}
-        #whop-checkout{min-height:460px;}
+        .whop-modal{
+          padding:12px;
+          overflow-y:auto;
+        }
+        .whop-modal__dialog{
+          width:100%;
+          border-radius:18px;
+          height:auto;
+          max-height:none;
+          overflow:visible;
+        }
+        .modal-card{
+          padding:20px;
+          overflow:visible;
+          height:auto;
+        }
+        .card-container{
+          gap:12px;
+        }
+        .whop-modal__title{
+          font-size:1.25rem;
+        }
+        .checkout-card .card-inner{
+          overflow:visible !important;
+          max-height:none !important;
+          height:auto !important;
+          padding:12px !important;
+        }
+        .checkout-card #whop-checkout,
+        .checkout-card #whop-checkout iframe{
+          min-height:auto !important;
+          height:auto !important;
+        }
       }
     </style>
   
@@ -550,7 +988,7 @@ But if you’re making money, will you really care?</p>
     <!-- TOTAL ROW -->
     <div class="total-row">
         <span></span>
-        <span class="total-price" style="font-weight: bold; font-size: 1.8rem;" data-usd='$99.00 <span style="font-weight: 200; color: #cfd8df;">one-time</span>' data-pkr='Rs. 27,720 <span style="font-weight: 200; color: #cfd8df;">one-time</span>'>$99.00 <span style="font-weight: 200; color: #cfd8df;">one-time</span></span>
+        <span class="total-price" style="font-weight: bold; font-size: 1.8rem;" data-usd='$99.00 <span style="font-weight: 200; color: #cfd8df;">one-time</span>' data-pkr='PKR 4,999.00 <span style="font-weight: 200; color: #cfd8df;">one-time</span>'>$99.00 <span style="font-weight: 200; color: #cfd8df;">one-time</span></span>
     </div>
 
     <!-- BUTTON -->
@@ -801,14 +1239,98 @@ In our 90-Day program, we provide a complete step-by-step system along with begi
       <div class="whop-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="whopModalTitle">
         <button class="whop-modal__close" type="button" aria-label="Close checkout" data-modal-close>&times;</button>
         <div class="whop-modal__header">
-          <h3 class="whop-modal__title" id="whopModalTitle">Complete Your Enrollment</h3>
+          <h3 class="whop-modal__title" id="whopModalTitle">
+            <span class="back-button" data-modal-close style="cursor:pointer; margin-right:8px;">←</span>
+            Configure your plan
+          </h3>
         </div>
         <div class="whop-modal__body">
-          <div class="whop-modal__body-scroll">
-            <div
-              id="whop-checkout"
-              data-whop-checkout-plan-id="plan_hhZFVShyV9lcp"
-              data-whop-checkout-theme="dark">
+          <div class="card-container">
+            <div class="modal-card checkout-card">
+              <div class="card-inner">
+                <div
+                  id="whop-checkout"
+                  data-whop-checkout-plan-id="plan_hhZFVShyV9lcp"
+                  data-whop-checkout-theme="dark">
+                </div>
+              </div>
+            </div>
+            <div class="modal-card">
+              <div class="card-inner">
+                <div class="order-summary">
+                  <div class="order-summary__title-wrapper">
+                    <img src="https://res.cloudinary.com/dklc9t647/image/upload/v1763591404/Untitled_design_5_msjeip.png" alt="Monetise Logo" class="order-summary__logo">
+                    <p class="order-summary__tagline">90 Days YouTube Automation Coaching Program</p>
+                  </div>
+                  
+                  <ul class="order-summary__features">
+                    <li class="order-summary__feature">
+                      <svg class="order-summary__feature-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                      </svg>
+                      <span>My AI System For Non-Expert Niches</span>
+                    </li>
+                    <li class="order-summary__feature">
+                      <svg class="order-summary__feature-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                      </svg>
+                      <span>12x Live Sessions (1 Month)</span>
+                    </li>
+                    <li class="order-summary__feature">
+                      <svg class="order-summary__feature-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                      </svg>
+                      <span>List of hand-picked Non-Expert niches</span>
+                    </li>
+                    <li class="order-summary__feature">
+                      <svg class="order-summary__feature-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                      <span>Individual Channel Review & Monthly Feedback</span>
+                    </li>
+                    <li class="order-summary__feature">
+                      <svg class="order-summary__feature-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                      </svg>
+                      <span>Monetise Private Community (Lifetime)</span>
+                    </li>
+                    <li class="order-summary__feature">
+                      <svg class="order-summary__feature-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                      </svg>
+                      <span>Canva Thumbnail Templates</span>
+                    </li>
+                    <li class="order-summary__feature">
+                      <svg class="order-summary__feature-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                      </svg>
+                      <span>Learn Until you Earn Guarantee</span>
+                    </li>
+                  </ul>
+                  
+                  <div class="order-summary__pricing">
+                    <div class="order-summary__price-row">
+                      <span class="order-summary__price-label">Program Fee</span>
+                      <span class="order-summary__price-value" id="monthlyPrice">PKR 4,999.00</span>
+                    </div>
+                    <div class="order-summary__price-row">
+                      <span class="order-summary__price-label">Tax (0%)</span>
+                      <span class="order-summary__price-value" id="taxPrice">PKR 0.00</span>
+                    </div>
+                    <div class="order-summary__price-row order-summary__price-row--total">
+                      <span class="order-summary__price-label">Due today</span>
+                      <span class="order-summary__price-value order-summary__price-value--total" id="totalPrice">
+                        <span id="totalAmount">PKR 4,999.00</span>
+                        <span style="font-weight: 400; color: #6b7280; font-size: 0.85rem; display: block; margin-top: 4px;">one-time</span>
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <p class="order-summary__disclaimer">
+                    By subscribing, you authorize us to charge you according to the terms until you cancel. You also agree to the <a href="#" target="_blank">Terms of Service</a> and <a href="#" target="_blank">Privacy Policy</a>.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -819,64 +1341,54 @@ In our 90-Day program, we provide a complete step-by-step system along with begi
 
 
     <!-- ========================= JS here ========================= -->
-    <script src="assets/js/bootstrap-5.0.0-beta2.min.js"></script>
-    <script src="assets/js/tiny-slider.js"></script>
-    <script src="assets/js/wow.min.js"></script>
-    <script src="assets/js/polyfill.js"></script>
-    <script src="assets/js/main.js"></script>
+    <script defer src="assets/js/bootstrap-5.0.0-beta2.min.js"></script>
+    <script defer src="assets/js/tiny-slider.js"></script>
+    <script defer src="assets/js/wow.min.js"></script>
+    <script defer src="assets/js/polyfill.js"></script>
+    <script defer src="assets/js/main.js"></script>
 
     <!-- ========================= Batch Status Logic ========================= -->
     <script>
-      (function() {
-        // Get current day of the month
+      // Delay execution to not block page load
+      window.addEventListener('DOMContentLoaded', function() {
         const currentDate = new Date();
         const dayOfMonth = currentDate.getDate();
         
-        // Function to update text based on date
         function updateBatchStatus() {
           const batchStatusText = document.getElementById('batchStatusText');
           const typeformContainer = document.getElementById('typeformContainer');
           
-          // Check if we're in the first week (days 1-7)
           if (dayOfMonth >= 1 && dayOfMonth <= 7) {
-            // First week of the month - Show enrollment open
-            if (batchStatusText) {
-              batchStatusText.textContent = 'Batch 1 — Starting Feb 15, 2025';
-            }
-            // Find and update TypeForm button text
+            if (batchStatusText) batchStatusText.textContent = 'Batch 1 — Starting Feb 15, 2025';
             if (typeformContainer) {
-              const typeformButton = typeformContainer.querySelector('button');
-              if (typeformButton) {
-                typeformButton.textContent = 'I want to Save My Spot';
-              }
+              const btn = typeformContainer.querySelector('button');
+              if (btn) btn.textContent = 'I want to Save My Spot';
             }
           } else {
-            // After first week - Show closed
-            if (batchStatusText) {
-              batchStatusText.textContent = 'Closed';
-            }
-            // Find and update TypeForm button text
+            if (batchStatusText) batchStatusText.textContent = 'Closed';
             if (typeformContainer) {
-              const typeformButton = typeformContainer.querySelector('button');
-              if (typeformButton) {
-                typeformButton.textContent = 'Join Waitlist';
-              }
+              const btn = typeformContainer.querySelector('button');
+              if (btn) btn.textContent = 'Join Waitlist';
             }
           }
         }
         
-        // Run immediately
         updateBatchStatus();
-        
-        // Also run after a short delay to catch TypeForm button after it loads
-        setTimeout(updateBatchStatus, 500);
         setTimeout(updateBatchStatus, 1000);
-        setTimeout(updateBatchStatus, 2000);
-      })();
+      });
     </script>
     
     <!-- ========================= Currency Switching Logic ========================= -->
     <script>
+      // Delay execution to not block page load
+      window.addEventListener('load', function() {
+        setTimeout(setPricesDelayed, 100);
+      });
+      
+      async function setPricesDelayed() {
+        await setPrices();
+      }
+      
       async function setPrices() {
         try {
           const ipRes = await fetch("https://api.ipify.org?format=json");
@@ -884,21 +1396,39 @@ In our 90-Day program, we provide a complete step-by-step system along with begi
           const geoRes = await fetch(`https://ipapi.co/${ipData.ip}/json/`);
           const geo = await geoRes.json();
           const country = geo.country;
+          const isPK = country === "PK";
 
           // Update all .price elements
           const prices = document.querySelectorAll(".price");
           prices.forEach(el => {
-            el.textContent = (country === "PK")
-              ? el.dataset.pkr
-              : el.dataset.usd;
+            el.textContent = isPK ? el.dataset.pkr : el.dataset.usd;
           });
 
           // Update .total-price element (uses innerHTML because it contains HTML)
           const totalPrice = document.querySelector(".total-price");
           if (totalPrice) {
-            totalPrice.innerHTML = (country === "PK")
+            totalPrice.innerHTML = isPK
               ? totalPrice.dataset.pkr
               : totalPrice.dataset.usd;
+          }
+
+          // Update checkout modal order summary prices - default to PKR
+          const monthlyPriceEl = document.getElementById('monthlyPrice');
+          const taxPriceEl = document.getElementById('taxPrice');
+          const totalAmountEl = document.getElementById('totalAmount');
+          
+          if (monthlyPriceEl && taxPriceEl && totalAmountEl) {
+            // Default to PKR, or use detected country
+            const usePKR = isPK || true; // Force PKR for now
+            if (usePKR) {
+              monthlyPriceEl.textContent = 'PKR 4,999.00';
+              taxPriceEl.textContent = 'PKR 0.00';
+              totalAmountEl.textContent = 'PKR 4,999.00';
+            } else {
+              monthlyPriceEl.textContent = '$99.00';
+              taxPriceEl.textContent = '$0.00';
+              totalAmountEl.textContent = '$99.00';
+            }
           }
         } catch (error) {
           console.log("Location Error:", error);
@@ -910,10 +1440,17 @@ In our 90-Day program, we provide a complete step-by-step system along with begi
           if (totalPrice) {
             totalPrice.innerHTML = totalPrice.dataset.usd;
           }
+          // Fallback for checkout modal - default to PKR
+          const monthlyPriceEl = document.getElementById('monthlyPrice');
+          const taxPriceEl = document.getElementById('taxPrice');
+          const totalAmountEl = document.getElementById('totalAmount');
+          if (monthlyPriceEl && taxPriceEl && totalAmountEl) {
+            monthlyPriceEl.textContent = 'PKR 4,999.00';
+            taxPriceEl.textContent = 'PKR 0.00';
+            totalAmountEl.textContent = 'PKR 4,999.00';
+          }
         }
       }
-
-      setPrices();
     </script>
     
     <!-- ========================= Whop Checkout Loader & Modal Logic ========================= -->
@@ -957,6 +1494,47 @@ In our 90-Day program, we provide a complete step-by-step system along with begi
           }
         });
       })();
+
+      // FINAL FIX: Match iframe dark color and fix scrolling
+      function styleWhopCheckout() {
+        const checkoutContainer = document.getElementById('whop-checkout');
+        if (!checkoutContainer) return;
+
+        // Ensure card-inner scrolls properly with matching dark background
+        const cardInner = checkoutContainer.closest('.card-inner');
+        if (cardInner) {
+          cardInner.style.cssText = 'overflow-y: auto !important; overflow-x: hidden !important; max-height: 100% !important; padding: 8px 20px 8px 20px !important; padding-right: 16px !important; background: #090909 !important; display: flex !important; flex-direction: column !important; -webkit-overflow-scrolling: touch !important;';
+        }
+        
+        // Set min-height to fit content with minimal extra space
+        checkoutContainer.style.cssText = 'width: 100% !important; display: block !important; min-height: 880px !important; height: auto !important; overflow: visible !important; background: #090909 !important; position: relative !important; flex: 1 1 auto !important; padding-bottom: 12px !important;';
+        
+        // Ensure iframe expands with content
+        const iframe = checkoutContainer.querySelector('iframe');
+        if (iframe) {
+          iframe.style.cssText = 'width: 100% !important; min-height: 880px !important; height: auto !important; overflow: visible !important; display: block !important; border: none !important; background: #090909 !important;';
+        }
+        
+        // Remove height restrictions from containers
+        const containers = checkoutContainer.querySelectorAll('div, form, section, article, main');
+        containers.forEach(el => {
+          if (el.style.maxHeight && el.style.maxHeight !== 'none') {
+            el.style.maxHeight = 'none';
+          }
+          if (el.style.overflow === 'hidden') {
+            el.style.overflow = 'visible';
+          }
+        });
+      }
+
+      // Run on modal open only
+      document.querySelectorAll('[data-whop-modal-trigger]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          setTimeout(styleWhopCheckout, 200);
+          setTimeout(styleWhopCheckout, 600);
+          setTimeout(styleWhopCheckout, 1200);
+        });
+      });
     </script>
 
   </body>
