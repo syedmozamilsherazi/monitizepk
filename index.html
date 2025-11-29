@@ -1046,7 +1046,7 @@ But if you’re making money, will you really care?</p>
 
     <!-- BUTTON -->
     <div class="waitlist-container" id="typeformContainer">
-        <div data-tf-live="01KAGSHTKCXQQD9QETC8SMJ95X"></div><script src="//embed.typeform.com/next/embed.js"></script>
+        <a href="https://whop.com/checkout/plan_hhZFVShyV9lcp" class="main-btn btn-hover" target="_blank" rel="noopener noreferrer">JOIN NOW</a>
     </div>
 
 </div>
@@ -1310,33 +1310,7 @@ In our 90-Day program, we provide a complete step-by-step system along with begi
 
     <!-- ========================= Batch Status Logic ========================= -->
     <script>
-      // Delay execution to not block page load
-      window.addEventListener('DOMContentLoaded', function() {
-        const currentDate = new Date();
-        const dayOfMonth = currentDate.getDate();
-        
-        function updateBatchStatus() {
-          const batchStatusText = document.getElementById('batchStatusText');
-          const typeformContainer = document.getElementById('typeformContainer');
-          
-          if (dayOfMonth >= 1 && dayOfMonth <= 7) {
-            if (batchStatusText) batchStatusText.textContent = 'Batch 1 — Starting Feb 15, 2025';
-            if (typeformContainer) {
-              const btn = typeformContainer.querySelector('button');
-              if (btn) btn.textContent = 'I want to Save My Spot';
-            }
-          } else {
-            if (batchStatusText) batchStatusText.textContent = 'Closed';
-            if (typeformContainer) {
-              const btn = typeformContainer.querySelector('button');
-              if (btn) btn.textContent = 'Join Waitlist';
-            }
-          }
-        }
-        
-        updateBatchStatus();
-        setTimeout(updateBatchStatus, 1000);
-      });
+      // Batch status logic removed - direct checkout link used
     </script>
     
     <!-- ========================= Currency Switching Logic ========================= -->
